@@ -1,6 +1,7 @@
 import { exiftool } from "exiftool-vendored";
 import { exec } from "child_process";
 import { promisify } from "util";
+import { recordedClockSeconds, recordedStamp } from "../helpers/clock.js";
 
 const execAsync = promisify(exec);
 
@@ -89,12 +90,11 @@ export async function getMetadata(inputPath) {
         parseFloat(frameRate) || parseFloat(String(frameRate).split("/")[0]);
       const totalFrames =
         ffprobeNbFrames ?? (ffprobeDuration ?? duration) * numericFrameRate;
-      const startSeconds =
-        start.getHours() * 3600 + start.getMinutes() * 60 + start.getSeconds();
+      // On the clock where it was recorded, not this computer's
+      const startSeconds = recordedClockSeconds(creationDate, start);
       const formulaEndSeconds =
         startSeconds + (totalFrames / numericFrameRate) * compressionRatio;
-      const expectedEndSeconds =
-        end.getHours() * 3600 + end.getMinutes() * 60 + end.getSeconds();
+      const expectedEndSeconds = startSeconds + realSeconds;
       console.log("\n--- SANITY CHECK (last frame) ---");
       console.log("Expected end (seconds since midnight):", expectedEndSeconds);
       console.log(
@@ -114,7 +114,13 @@ export async function getMetadata(inputPath) {
         `Compression ratio: 1 second of video = ${compressionRatio} seconds of reality.`,
       );
 
-      return { startTime: start, ratio: compressionRatio, frameRate };
+      return {
+        startTime: start,
+        startClock: startSeconds,
+        stamp: recordedStamp(creationDate, start),
+        ratio: compressionRatio,
+        frameRate,
+      };
     } else {
       console.log("\n❌ CRITICAL DATA MISSING.");
       console.log(

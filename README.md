@@ -54,7 +54,6 @@ Uses **ffmpeg** `drawtext` to overlay HH:MM on each frame. The formula is implem
 ## Setup
 
 ```bash
-# From the automations repo root
 npm install
 
 # Ensure ffmpeg is installed (e.g. via Homebrew)
@@ -67,13 +66,16 @@ brew install ffmpeg
 2. Run:
 
 ```bash
-node index.js
+npm start
 ```
 
 3. Processed videos appear in `output/` (top and bottom timestamp variants)
 4. Originals are moved to `archive/`
 
 ## Notes
+
+- Times are on the clock where the video was recorded: an iPhone saves the time zone with the recording, so a video shot in California shows California time even when it's processed somewhere else. Output files are named the same way.
+- `npm test` checks that, with the computer set to New York time.
 
 - Video files must have valid CreationDate, ModifyDate, and Duration metadata. Files sent via apps like WhatsApp may have metadata stripped and will be skipped.
 - The font used for the overlay is `assets/MostraNuova.otf` – ensure this file exists.

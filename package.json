@@ -1,0 +1,15 @@
+{
+  "name": "timelapse-timestamps",
+  "version": "1.0.0",
+  "description": "Puts the real clock time on timelapse videos",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "TZ=America/New_York node --test"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "exiftool-vendored": "^35.0.0"
+  }
+}
