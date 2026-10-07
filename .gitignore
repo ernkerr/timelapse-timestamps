@@ -2,3 +2,7 @@ node_modules/
 .DS_Store
 input/*
 !input/.gitkeep
+archive/*
+!archive/.gitkeep
+output/*
+!output/.gitkeep
